@@ -23,7 +23,7 @@
         ],
         "psr-4":
         {
-            "Diepxuan\\Sitemap\\": ""
+            "Diepxuan\\Email\\": ""
         }
     }
 }
