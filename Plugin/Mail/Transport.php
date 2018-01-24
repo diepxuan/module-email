@@ -65,19 +65,7 @@ class Transport extends \Magento\Framework\Mail\Transport
             $proceed();
         }
 
-//        $this->getLogger()->critical(print_r(get_class_methods($this->getMessage()), true));
-//        $this->getLogger()->critical(print_r(get_class_methods($subject->getMessage()), true));
-//        $this->getLogger()->critical($this->getMessage()->getBodyText());
-//        $this->getLogger()->critical($this->getMessage()->getFrom());
-
-//        $message = $subject->getMessage();
-        $this->sendSmtpMessage();
-
-//        $this->getLogger()->critical(print_r($this->getMessage()->getHeaders(), true));
-
-//        $this->getLogger()->critical(print_r($this->getMessage()->getBody(), true));
-
-        return;
+        return $this->sendSmtpMessage();
     }
 
     /**
@@ -114,9 +102,7 @@ class Transport extends \Magento\Framework\Mail\Transport
 
             $this->initialize($this->helper->getSmtpHost(), $config);
 
-            $result = $this->send($this->getMessage());
-
-//            $this->getLogger()->critical($result);
+            $this->send($this->getMessage());
         } catch (\Exception $e) {
             $this->getLogger()->critical($e->getMessage());
 
