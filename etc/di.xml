@@ -8,4 +8,21 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <!-- For Magento < 2.2 -->
+    <preference for="\Magento\Framework\Mail\Transport" type="Diepxuan\Email\Model\Transport"/>
+    <type name="Diepxuan\Email\Model\Transport">
+        <plugin sortOrder="100" name="magePalEmailTransport"
+                type="Diepxuan\Email\Plugin\Mail\TransportPlugin"/>
+    </type>
+
+    <!-- For Magento Eq 2.2 -->
+    <type name="\Magento\Framework\Mail\TransportInterface">
+        <plugin sortOrder="100" name="magePalEmailTransportInterface"
+                type="Diepxuan\Email\Plugin\Mail\TransportPlugin"/>
+    </type>
+    <type name="Magento\Framework\Mail\Template\TransportBuilder">
+        <plugin sortOrder="1" name="magePalEmailTransportBuilder"
+                type="Diepxuan\Email\Plugin\Mail\Template\TransportBuilderPlugin"/>
+    </type>
+
 </config>
