@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Dxvn, Inc. All rights reserved.
+ * @author  Tran Ngoc Duc <caothu91@gmail.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <system>
+            <smtp>
+                <active>1</active>
+                <name>localhost</name>
+                <ssl>ssl</ssl>
+                <auth>LOGIN</auth>
+                <smtphost>smtp.gmail.com</smtphost>
+                <smtpport>465</smtpport>
+                <set_return_path>1</set_return_path>
+                <set_reply_to>1</set_reply_to>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </smtp>
+        </system>
+    </default>
+</config>
