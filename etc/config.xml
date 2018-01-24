@@ -5,20 +5,19 @@
  * @author  Tran Ngoc Duc <caothu91@gmail.com>
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <system>
-            <smtpcustom>
-                <active>1</active>
-                <name>localhost</name>
-                <ssl>ssl</ssl>
-                <auth>LOGIN</auth>
+            <smtp>
+                <active>false</active>
                 <smtphost>smtp.gmail.com</smtphost>
                 <smtpport>465</smtpport>
-                <set_return_path>1</set_return_path>
-                <set_reply_to>1</set_reply_to>
-                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
-            </smtpcustom>
+                <smtptype>ssl</smtptype>
+                <authtype>LOGIN</authtype>
+                <username/>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+            </smtp>
         </system>
     </default>
 </config>
