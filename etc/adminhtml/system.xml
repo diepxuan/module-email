@@ -17,25 +17,15 @@
                     <label>Custom SMTP?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="smtphost" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0"
+                <field id="smtpname" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0"
                        showInStore="0" canRestore="1">
-                    <label>SMTP Host</label>
-                    <comment>Use "smtp.gmail.com" for Gmail or Google Apps.</comment>
+                    <label>domain or IP</label>
+                    <comment>127.0.0.1</comment>
                     <depends>
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="smtpport" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0"
-                       showInStore="0" canRestore="1">
-                    <label>SMTP Port</label>
-                    <validate>validate-number</validate>
-                    <frontend_class>validate-number</frontend_class>
-                    <comment>Use 465 (ssl) or 587 (tls) if port 25 is throttled or blocked.</comment>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
-                </field>
-                <field id="smtptype" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="0"
+                <field id="smtptype" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="0"
                        showInStore="0" canRestore="1">
                     <label>SSL type</label>
                     <source_model>Diepxuan\Email\Model\Config\Source\Email\Smtptype</source_model>
@@ -44,7 +34,27 @@
                         <field id="active">1</field>
                     </depends>
                 </field>
-                 <field id="authtype" translate="label" type="select" sortOrder="130" showInDefault="1"
+                <field id="smtphost" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="0"
+                       showInStore="0" canRestore="1">
+                    <label>SMTP Host</label>
+                    <comment>smtp.gmail.com</comment>
+                    <depends>
+                        <field id="active">1</field>
+                        <field id="smtptype" separator=",">ssl,tls</field>
+                    </depends>
+                </field>
+                <field id="smtpport" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0"
+                       showInStore="0" canRestore="1">
+                    <label>SMTP Port</label>
+                    <validate>validate-number</validate>
+                    <frontend_class>validate-number</frontend_class>
+                    <comment>Use 465 (ssl) or 587 (tls) if port 25 is throttled or blocked.</comment>
+                    <depends>
+                        <field id="active">1</field>
+                        <field id="smtptype" separator=",">ssl,tls</field>
+                    </depends>
+                </field>
+                 <field id="authtype" translate="label" type="select" sortOrder="140" showInDefault="1"
                         showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Authentication method</label>
                     <source_model>Magento\Config\Model\Config\Source\Email\Smtpauth</source_model>
@@ -53,21 +63,32 @@
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="username" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="0"
+                <field id="username" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="0"
                        showInStore="0">
                     <label>SMTP Username</label>
                     <comment>Email Address or Account ID.</comment>
                     <depends>
                         <field id="active">1</field>
+                        <field id="authtype" separator=",">PLAIN,LOGIN,CRAM-MD5</field>
                     </depends>
                 </field>
-                <field id="password" translate="label" type="password" sortOrder="150" showInDefault="1"
+                <field id="password" translate="label" type="obscure" sortOrder="160" showInDefault="1"
                        showInWebsite="0"
                        showInStore="0">
                     <label>Password</label>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
                         <field id="active">1</field>
+                        <field id="authtype" separator=",">PLAIN,LOGIN,CRAM-MD5</field>
+                    </depends>
+                </field>
+                <field id="override" translate="label" type="select" sortOrder="170" showInDefault="1"
+                       showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>override email from</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                        <field id="authtype" separator=",">PLAIN,LOGIN,CRAM-MD5</field>
                     </depends>
                 </field>
             </group>

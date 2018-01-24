@@ -14,13 +14,15 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const SMTP_ACTIVE = 'system/smtp/active';
-    const SMTP_HOST   = 'system/smtp/smtphost';
-    const SMTP_PORT   = 'system/smtp/smtpport';
-    const SMTP_TYPE   = 'system/smtp/smtptype';
-    const SMTP_AUTH   = 'system/smtp/authtype';
-    const SMTP_USER   = 'system/smtp/username';
-    const SMTP_PASS   = 'system/smtp/password';
+    const SMTP_ACTIVE   = 'system/smtp/active';
+    const SMTP_NAME     = 'system/smtp/smtpname';
+    const SMTP_HOST     = 'system/smtp/smtphost';
+    const SMTP_PORT     = 'system/smtp/smtpport';
+    const SMTP_TYPE     = 'system/smtp/smtptype';
+    const SMTP_AUTH     = 'system/smtp/authtype';
+    const SMTP_USER     = 'system/smtp/username';
+    const SMTP_PASS     = 'system/smtp/password';
+    const SMTP_OVERRIDE = 'system/smtp/override';
 
     /**
      * @return bool
@@ -28,6 +30,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function isActive()
     {
         return $this->scopeConfig->isSetFlag(self::SMTP_ACTIVE, ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     *  system config host
+     *
+     * @return string
+     */
+    public function getSmtpName()
+    {
+        return $this->scopeConfig->getValue(self::SMTP_NAME, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -88,5 +100,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getPassword()
     {
         return $this->scopeConfig->getValue(self::SMTP_PASS, ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Get system override email from
+     *
+     * @return mixed
+     */
+    public function isOverride()
+    {
+        return $this->scopeConfig->isSetFlag(self::SMTP_OVERRIDE, ScopeInterface::SCOPE_STORE);
     }
 }

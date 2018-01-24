@@ -17,8 +17,12 @@ use Psr\Log\LoggerInterface;
  * Class Transport
  * @package Diepxuan\Email\Plugin\Mail
  */
-class Transport extends \Magento\Framework\Mail\Transport
+class Transport extends \Zend_Mail_Transport_Smtp
 {
+    /**
+     * @var \Magento\Framework\Mail\MessageInterface
+     */
+    protected $_message;
 
     /**
      * @var \Diepxuan\Email\Helper\Data
@@ -36,18 +40,18 @@ class Transport extends \Magento\Framework\Mail\Transport
      * @param \Magento\Framework\Mail\MessageInterface $message
      * @param \Diepxuan\Email\Helper\Data              $helper
      * @param \Psr\Log\LoggerInterface                 $logger
-     * @param null                                     $parameters
      */
     public function __construct(
         MessageInterface $message,
         SmtpHelper $helper,
-        LoggerInterface $logger,
-        $parameters = null
+        LoggerInterface $logger
     ) {
-        parent::__construct($message, $parameters);
-
-        $this->helper = $helper;
-        $this->logger = $logger;
+        if (!$message instanceof \Zend_Mail) {
+            throw new \InvalidArgumentException('The message should be an instance of \Zend_Mail');
+        }
+        $this->_message = $message;
+        $this->helper   = $helper;
+        $this->logger   = $logger;
     }
 
     /**
@@ -55,7 +59,6 @@ class Transport extends \Magento\Framework\Mail\Transport
      * @param \Closure                                   $proceed
      *
      * @throws \Magento\Framework\Exception\MailException
-     * @throws \Zend_Mail_Exception
      */
     public function aroundSendMessage(
         TransportInterface $subject,
@@ -65,28 +68,27 @@ class Transport extends \Magento\Framework\Mail\Transport
             $proceed();
         }
 
-        return $this->sendSmtpMessage();
+        $this->sendSmtpMessage();
     }
 
     /**
      * @throws \Magento\Framework\Exception\MailException
-     * @throws \Zend_Mail_Exception
      */
     public function sendSmtpMessage()
     {
-        if ($this->getMessage() instanceof \Zend_mail) {
+        try {
             if ($this->getMessage()->getDate() === null) {
                 $this->getMessage()->setDate();
             }
-        }
 
-        try {
-
-            $this->getMessage()->clearFrom();
-            $this->getMessage()->setFrom($this->helper->getUsername());
+            if ($this->helper->isOverride()) {
+                $this->getMessage()->clearFrom();
+                $this->getMessage()->setFrom($this->helper->getUsername());
+                $this->getMessage()->setReplyTo($this->helper->getUsername());
+            }
 
             $config = [
-                'name' => $this->helper->getSmtpHost(),
+                'name' => $this->helper->getSmtpName(),
                 'port' => $this->helper->getSmtpPort(),
             ];
 
@@ -103,6 +105,9 @@ class Transport extends \Magento\Framework\Mail\Transport
             $this->initialize($this->helper->getSmtpHost(), $config);
 
             $this->send($this->getMessage());
+
+            $this->getLogger()->critical($this->getMessage()->getReplyTo());
+            $this->getLogger()->critical(print_r($this->getMessage()->getHeaders(), true));
         } catch (\Exception $e) {
             $this->getLogger()->critical($e->getMessage());
 
@@ -119,18 +124,30 @@ class Transport extends \Magento\Framework\Mail\Transport
      */
     public function initialize($host = '127.0.0.1', array $config = [])
     {
-        if (isset($config['name'])) {
-            $this->_name = $config['name'];
-        }
-        if (isset($config['port'])) {
-            $this->_port = $config['port'];
-        }
-        if (isset($config['auth'])) {
-            $this->_auth = $config['auth'];
-        }
+        parent::__construct($host, $config);
+    }
 
-        $this->_host   = $host;
-        $this->_config = $config;
+    /**
+     * Send a mail using this transport
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\MailException
+     */
+    public function sendMessage()
+    {
+        try {
+            parent::send($this->_message);
+        } catch (\Exception $e) {
+            throw new \Magento\Framework\Exception\MailException(new \Magento\Framework\Phrase($e->getMessage()), $e);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMessage()
+    {
+        return $this->_message;
     }
 
     /**

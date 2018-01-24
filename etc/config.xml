@@ -11,12 +11,14 @@
         <system>
             <smtp>
                 <active>false</active>
+                <smtpname>127.0.0.1</smtpname>
+                <smtptype>ssl</smtptype>
                 <smtphost>smtp.gmail.com</smtphost>
                 <smtpport>465</smtpport>
-                <smtptype>ssl</smtptype>
                 <authtype>LOGIN</authtype>
                 <username/>
                 <password backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <override>true</override>
             </smtp>
         </system>
     </default>
